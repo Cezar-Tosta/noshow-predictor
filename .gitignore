@@ -1,0 +1,18 @@
+# Ambiente virtual — nunca commitar
+.venv/
+venv/
+# Cache do Python
+__pycache__/
+*.pyc
+*.pyo
+# Dataset original — baixar manualmente do Kaggle (arquivo grande) data/raw/*.csv
+# Modelo treinado — gerado localmente
+model/*.pkl
+# Variáveis de ambiente e segredos
+.env
+# Arquivos temporários do VS Code e do Windows
+.vscode/
+Thumbs.db
+desktop.ini
+# Logs
+*.log
