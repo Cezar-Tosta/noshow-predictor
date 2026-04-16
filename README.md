@@ -93,7 +93,7 @@ Baixe em: https://www.kaggle.com/datasets/joniarroba/noshowappointments
 
 Salve o arquivo **KaggleV2-May-2016.csv** em: `data/raw/`
 
-> O arquivo é ignorado pelo `.gitignore` — não será commitado acidentalmente.
+> ⚠️ Adicione a linha `data/raw/*.csv` ao seu `.gitignore` para garantir que o dataset não seja commitado acidentalmente.
 
 ### 6. Verificar o ambiente
 
