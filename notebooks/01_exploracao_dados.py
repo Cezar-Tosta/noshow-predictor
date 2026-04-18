@@ -91,3 +91,16 @@ for col in categoricas:
 print('\n' + '=' * 60)
 print('Exploração inicial dos dados concluída!')
 print('=' * 60)
+
+
+
+
+# Observações Maicon sobre os dados:
+
+# Uma informação que me surpreendeu foi na análise Taxa de no-show por gẽnero, eu imaginava que homens teriam a tendência de faltar mais que mulheres, porém, os números são bem próximos.
+# Outra informação que me surpreendeu foi a Verificação de idades inválidas, não imaginava que poderia ter esse tipo de erro dentro do banco de dados.
+# os números de no-show de pessoas que recebem SMS e que não recebem são bem aproximadas.
+
+# Sugestão Maicon:
+
+# Alguns termos me causaram dúvidas pela falta de conhecimento de inglês, por exemplo, a coluna 'Scholarship' que significa Bolsa Familia, ou, a coluna 'Neighbourhood' que significa Bairro, deixo como sugestão de melhoria traduzirmos todas as colunas para facilitar a compreensão.
