@@ -33,7 +33,7 @@ Dado bruto → Exploração → Pré-processamento → Modelo → App → Deploy
 | Parte | Título | Script gerado |
 |---|---|---|
 | 1 | Visão Geral, Ambiente Local e Repositório | `00_verificar_ambiente.py` |
-| 2 | Entendendo o Problema e os Dados | `01_exploracao_dados.py` |
+| 2 | Entendendo o Problema e os Dados | `01_exploracao_dados.py` | `01a_auditoria_dados.py` |
 | 3 | Análise Exploratória de Dados (EDA) | `02_eda.py` |
 | 4 | Pré-processamento e Engenharia de Features | `03_preprocessamento.py` |
 | 5 | Seleção de Features e Divisão dos Dados | `04_selecao_features.py` |
@@ -69,6 +69,7 @@ noshow-predictor/
 ├── notebooks/
 │   ├── 00_verificar_ambiente.py
 │   ├── 01_exploracao_dados.py
+│   ├── 01a_auditoria_dados.py
 │   ├── 02_eda.py
 │   ├── 03_preprocessamento.py
 │   ├── 04_selecao_features.py
@@ -88,6 +89,27 @@ noshow-predictor/
 > - `.venv/` — ambiente virtual, criado localmente por cada colaborador
 > - `data/raw/*.csv` — dataset original (~9 MB), baixar do Kaggle
 > - `model/*.pkl` — modelo treinado, gerado ao executar a Parte 6
+
+## Dicionário de Dados
+
+Abaixo estão as descrições das colunas presentes no dataset original para facilitar o entendimento do negócio:
+
+| Coluna | Descrição |
+| :--- | :--- |
+| **PatientId** | Identificação única do paciente. |
+| **AppointmentID** | Identificação única de cada agendamento. |
+| **Gender** | Sexo do paciente (F = Feminino, M = Masculino). |
+| **ScheduledDay** | O dia em que o paciente marcou a consulta. |
+| **AppointmentDay** | O dia real da consulta médica. |
+| **Age** | Idade do paciente. |
+| **Neighbourhood** | O bairro onde a unidade de saúde está localizada. |
+| **Scholarship** | Indica se o paciente é beneficiário do Bolsa Família (0 = Não, 1 = Sim). |
+| **Hipertension** | Se o paciente possui diagnóstico de hipertensão (0 ou 1). |
+| **Diabetes** | Se o paciente possui diagnóstico de diabetes (0 ou 1). |
+| **Alcoholism** | Se o paciente possui diagnóstico de alcoolismo (0 ou 1). |
+| **Handcap** | Indica se o paciente possui alguma deficiência (0 a 4). |
+| **SMS_received** | Se 1 ou mais mensagens SMS foram enviadas ao paciente. |
+| **No-show** | **Alvo (Target):** "No" (Compareceu) ou "Yes" (Faltou). |
 
 ## Como Configurar o Projeto Localmente
 
@@ -161,6 +183,7 @@ Execute sempre a partir da raiz do projeto. Os scripts usam `pathlib.Path` para 
 
 ```bash
 python notebooks/01_exploracao_dados.py
+python notebooks/01a_auditoria_dados.py
 python notebooks/02_eda.py
 # ... e assim por diante, em ordem
 ```
