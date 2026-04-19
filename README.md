@@ -251,6 +251,6 @@ Fonte: https://www.kaggle.com/datasets/joniarroba/noshowappointments
 
 Este projeto é desenvolvido em regime de mentoria. O mentorado trabalha em um fork próprio e contribui via Pull Requests e Issues abertas no repositório original.
 
-## Autor
+## Autores
 
-Cezar Tosta
+Cezar Tosta, Maicon Gomes 
