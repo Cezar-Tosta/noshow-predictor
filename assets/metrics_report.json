@@ -1,0 +1,20 @@
+{
+    "acuracia": 0.5838,
+    "precisao": 0.3566,
+    "recall": 0.5712,
+    "f1_score": 0.4391,
+    "auc_roc": 0.6083,
+    "matriz_confusao": {
+        "VN": 3026,
+        "FP": 2113,
+        "FN": 879,
+        "VP": 1171
+    },
+    "analise_clinica": {
+        "noshow_reais": 2050,
+        "noshow_detectados": 1171,
+        "taxa_deteccao_pct": 57.1,
+        "nao_detectados_FN": 879,
+        "alarmes_falsos_FP": 2113
+    }
+}
