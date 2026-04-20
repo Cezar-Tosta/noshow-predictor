@@ -21,6 +21,8 @@ Em unidades públicas de saúde, o não comparecimento de pacientes gera:
 
 Este modelo permite ações proativas — como envio de lembretes direcionados, overbooking controlado e priorização de lista de espera — com base na probabilidade prevista de no-show para cada agendamento.
 
+---
+
 ## O Pipeline — Visão Geral
 
 O projeto percorre cinco etapas, cada uma correspondendo a um conjunto de partes:
@@ -33,7 +35,7 @@ Dado bruto → Exploração → Pré-processamento → Modelo → App → Deploy
 | Parte | Título | Script gerado |
 |---|---|---|
 | 1 | Visão Geral, Ambiente Local e Repositório | `00_verificar_ambiente.py` |
-| 2 | Entendendo o Problema e os Dados | `01_exploracao_dados.py` | `01a_auditoria_dados.py` |
+| 2 | Entendendo o Problema e os Dados | `01_exploracao_dados.py` · `01a_auditoria_dados.py` |
 | 3 | Análise Exploratória de Dados (EDA) | `02_eda.py` |
 | 4 | Pré-processamento e Engenharia de Features | `03_preprocessamento.py` |
 | 5 | Seleção de Features e Divisão dos Dados | `04_selecao_features.py` |
@@ -42,6 +44,8 @@ Dado bruto → Exploração → Pré-processamento → Modelo → App → Deploy
 | 8 | Interpretabilidade com SHAP | `07_interpretabilidade.py` |
 | 9 | Construção do App com Streamlit | `app.py` |
 | 10 | Deploy no Streamlit Cloud e Documentação Final | `pipeline_completo.py` |
+
+---
 
 ## Stack Tecnológica
 
@@ -58,6 +62,8 @@ Dado bruto → Exploração → Pré-processamento → Modelo → App → Deploy
 | Persistência | joblib | Salvar e carregar o modelo |
 | App web | Streamlit | Interface interativa |
 | Deploy | Streamlit Cloud | Publicação gratuita via GitHub |
+
+---
 
 ## Estrutura do Repositório
 
@@ -90,26 +96,7 @@ noshow-predictor/
 > - `data/raw/*.csv` — dataset original (~9 MB), baixar do Kaggle
 > - `model/*.pkl` — modelo treinado, gerado ao executar a Parte 6
 
-## Dicionário de Dados
-
-Abaixo estão as descrições das colunas presentes no dataset original para facilitar o entendimento do negócio:
-
-| Coluna | Descrição |
-| :--- | :--- |
-| **PatientId** | Identificação única do paciente. |
-| **AppointmentID** | Identificação única de cada agendamento. |
-| **Gender** | Sexo do paciente (F = Feminino, M = Masculino). |
-| **ScheduledDay** | O dia em que o paciente marcou a consulta. |
-| **AppointmentDay** | O dia real da consulta médica. |
-| **Age** | Idade do paciente. |
-| **Neighbourhood** | O bairro onde a unidade de saúde está localizada. |
-| **Scholarship** | Indica se o paciente é beneficiário do Bolsa Família (0 = Não, 1 = Sim). |
-| **Hipertension** | Se o paciente possui diagnóstico de hipertensão (0 ou 1). |
-| **Diabetes** | Se o paciente possui diagnóstico de diabetes (0 ou 1). |
-| **Alcoholism** | Se o paciente possui diagnóstico de alcoolismo (0 ou 1). |
-| **Handcap** | Indica se o paciente possui alguma deficiência (0 a 4). |
-| **SMS_received** | Se 1 ou mais mensagens SMS foram enviadas ao paciente. |
-| **No-show** | **Alvo (Target):** "No" (Compareceu) ou "Yes" (Faltou). |
+---
 
 ## Como Configurar o Projeto Localmente
 
@@ -177,18 +164,53 @@ Todas as bibliotecas devem aparecer com versão, sem erros.
 
 `Ctrl+Shift+P` → **Python: Select Interpreter** → selecione `.venv`
 
-### 9. Executar os scripts
+---
 
-Execute sempre a partir da raiz do projeto. Os scripts usam `pathlib.Path` para montar caminhos compatíveis com Windows e Linux:
+## Executando os Scripts do Pipeline
+
+Execute sempre a partir da **raiz do projeto**, com o venv ativo. Os scripts usam `pathlib.Path` — compatíveis com Windows e Linux.
 
 ```bash
 python notebooks/01_exploracao_dados.py
 python notebooks/01a_auditoria_dados.py
 python notebooks/02_eda.py
-# ... e assim por diante, em ordem
+python notebooks/03_preprocessamento.py
+python notebooks/04_selecao_features.py
+python notebooks/05_treinamento.py
+python notebooks/06_avaliacao.py
+python notebooks/07_interpretabilidade.py
 ```
 
-## Como Navegar pelo Histórico e Acompanhar a Construção do Projeto
+> ⚠️ Execute os scripts **em ordem**. Cada um depende dos arquivos gerados pelo anterior.
+> O script da Parte 6 (`05_treinamento.py`) gera o `model.pkl` — necessário para o app e para os scripts das Partes 7 e 8.
+
+---
+
+## Executando o App Streamlit
+
+> ⚠️ O app **não é executado com `python app.py`** — ele precisa ser iniciado pelo servidor do Streamlit.
+
+Com o venv ativo, a partir da **raiz do projeto**:
+
+```bash
+streamlit run app.py
+```
+
+O navegador abrirá automaticamente em `http://localhost:8501`. Se não abrir, acesse o endereço manualmente.
+
+Para encerrar o app, pressione `Ctrl+C` no terminal.
+
+**Pré-requisitos para o app funcionar corretamente:**
+
+| Arquivo necessário | Gerado por | Parte |
+|---|---|---|
+| `model/model.pkl` | `05_treinamento.py` | Parte 6 |
+| `model/feature_names.pkl` | `05_treinamento.py` | Parte 6 |
+| `assets/metrics_report.json` | `06_avaliacao.py` | Parte 7 |
+
+---
+
+## Como Navegar pelo Histórico e Acompanhar a Evolução do Projeto
 
 O repositório foi construído parte por parte, com commits padronizados. Isso permite que qualquer pessoa acompanhe a evolução completa do projeto — do ambiente inicial ao deploy — como se fosse um livro com capítulos.
 
@@ -253,27 +275,45 @@ feat: deploy no Streamlit Cloud e documentação final             ← Parte 10
 
 Cada commit é um ponto de parada — você pode ler o script adicionado naquele commit, executá-lo, entender o que ele faz e só então avançar para o próximo.
 
-## Dataset
+---
 
-**Medical Appointment No Shows — Kaggle**
+## Dicionário de Dados
 
-- 110.527 registros de agendamentos reais
-- Coletado em Vitória (ES), Brasil, entre 2015 e 2016
-- 14 variáveis — demográficas, clínicas e de agendamento
-- Target: coluna `No-show` (`"Yes"` = não compareceu = 1 | `"No"` = compareceu = 0)
+| Coluna | Descrição |
+|:---|:---|
+| **PatientId** | Identificação única do paciente. |
+| **AppointmentID** | Identificação única de cada agendamento. |
+| **Gender** | Sexo do paciente (F = Feminino, M = Masculino). |
+| **ScheduledDay** | O dia em que o paciente marcou a consulta. |
+| **AppointmentDay** | O dia real da consulta médica. |
+| **Age** | Idade do paciente. |
+| **Neighbourhood** | O bairro onde a unidade de saúde está localizada. |
+| **Scholarship** | Indica se o paciente é beneficiário do Bolsa Família (0 = Não, 1 = Sim). |
+| **Hipertension** | Se o paciente possui diagnóstico de hipertensão (0 ou 1). |
+| **Diabetes** | Se o paciente possui diagnóstico de diabetes (0 ou 1). |
+| **Alcoholism** | Se o paciente possui diagnóstico de alcoolismo (0 ou 1). |
+| **Handcap** | Indica se o paciente possui alguma deficiência (0 a 4). |
+| **SMS_received** | Se 1 ou mais mensagens SMS foram enviadas ao paciente. |
+| **No-show** | **Alvo (Target):** `"No"` = compareceu (0) \| `"Yes"` = não compareceu (1). |
 
 > ⚠️ A coluna `No-show` tem lógica invertida: `"Yes"` significa **não compareceu**.
 
-Fonte: https://www.kaggle.com/datasets/joniarroba/noshowappointments
+Fonte do dataset: https://www.kaggle.com/datasets/joniarroba/noshowappointments
+
+---
 
 ## App
 
 *(URL pública será adicionada após o deploy na Parte 10)*
 
+---
+
 ## Contribuindo
 
 Este projeto é desenvolvido em regime de mentoria. O mentorado trabalha em um fork próprio e contribui via Pull Requests e Issues abertas no repositório original.
 
+---
+
 ## Autores
 
-Cezar Tosta, Maicon Gomes 
+Cezar Tosta · Maicon Gomes
