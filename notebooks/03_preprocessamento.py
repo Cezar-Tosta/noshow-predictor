@@ -58,7 +58,8 @@ print('\n--- Removendo colunas irrelevantes ---')
 colunas_remover = [
     'PatientId',       # apenas identificador
     'AppointmentID',   # apenas identificador
-    'ScheduledDay',    # substituída por dias_antecedencia 'AppointmentDay',  # substituída por dias_antecedencia
+    'ScheduledDay',    # substituída por dias_antecedencia 
+    'AppointmentDay',  # substituída por dias_antecedencia
     'No-show',         # substituída pela coluna noshow (numérica)
 ]
 df = df.drop(columns=colunas_remover)
