@@ -8,9 +8,11 @@ import shap
 import joblib
 import numpy as np
 import pandas as pd
+import xgboost as xgb
 import matplotlib.pyplot as plt
 import streamlit as st
 from pathlib import Path
+from sklearn.model_selection import train_test_split
 
 # ── CONFIGURAÇÃO DA PÁGINA ───────────────────────────────────────
 st.set_page_config(
@@ -19,12 +21,55 @@ st.set_page_config(
     layout='wide'
 )
 
-# ── CARREGAMENTO DO MODELO (COM CACHE) ───────────────────────────
+# ── CARREGAMENTO OU TREINAMENTO DO MODELO ────────────────────────
 @st.cache_resource
-def carregar_modelo():
-    modelo        = joblib.load(Path('model') / 'model.pkl')
-    feature_names = joblib.load(Path('model') / 'feature_names.pkl')
+def carregar_ou_treinar_modelo():
+    caminho_modelo = Path('model') / 'model.pkl'
+    caminho_feats  = Path('model') / 'feature_names.pkl'
+
+    # Se os arquivos já existem, apenas carregá-los
+    if caminho_modelo.exists() and caminho_feats.exists():
+        modelo        = joblib.load(caminho_modelo)
+        feature_names = joblib.load(caminho_feats)
+        return modelo, feature_names
+
+    # Caso contrário, treinar a partir dos dados processados
+    caminho_treino = Path('data') / 'processed' / 'train.csv'
+    if not caminho_treino.exists():
+        st.error(
+            'Dados de treino não encontrados em data/processed/train.csv. '
+            'Execute primeiro o script notebooks/04_selecao_features.py '
+            'ou notebooks/pipeline_completo.py.'
+        )
+        st.stop()
+
+    treino        = pd.read_csv(caminho_treino)
+    X_treino      = treino.drop(columns=['noshow'])
+    y_treino      = treino['noshow']
+    feature_names = X_treino.columns.tolist()
+
+    neg = (y_treino == 0).sum()
+    pos = (y_treino == 1).sum()
+
+    modelo = xgb.XGBClassifier(
+        n_estimators     = 300,
+        max_depth        = 4,
+        learning_rate    = 0.05,
+        subsample        = 0.8,
+        colsample_bytree = 0.8,
+        scale_pos_weight = neg / pos,
+        random_state     = 42,
+        n_jobs           = -1,
+    )
+    modelo.fit(X_treino, y_treino)
+
+    # Salvar para reutilizar na mesma sessão
+    caminho_modelo.parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump(modelo,        caminho_modelo)
+    joblib.dump(feature_names, caminho_feats)
+
     return modelo, feature_names
+
 
 @st.cache_data
 def carregar_metricas():
@@ -34,14 +79,10 @@ def carregar_metricas():
             return json.load(f)
     return None
 
-try:
-    modelo, feature_names = carregar_modelo()
-    modelo_carregado = True
-except Exception as e:
-    modelo_carregado = False
-    st.error(f'Erro ao carregar o modelo: {e}')
-    st.info('Execute o script da Parte 6 para gerar o modelo.')
-    st.stop()
+
+# Inicializar modelo — treina automaticamente se .pkl não existir
+with st.spinner('Carregando o modelo... (pode levar alguns minutos no primeiro acesso)'):
+    modelo, feature_names = carregar_ou_treinar_modelo()
 
 metricas = carregar_metricas()
 
@@ -90,7 +131,7 @@ with aba_previsao:
         bolsa_familia = st.checkbox('Inscrito no Bolsa Família')
 
         st.divider()
-        btn_prever = st.button('🔮 Prever No-Show', use_container_width=True)
+        btn_prever = st.button('🔮 Prever No-Show')
 
     # Área principal — resultado
     if btn_prever:
@@ -214,7 +255,8 @@ with aba_metricas:
     else:
         st.warning(
             'Arquivo metrics_report.json não encontrado. '
-            'Execute o script da Parte 7.'
+            'Execute o script notebooks/06_avaliacao.py '
+            'ou notebooks/pipeline_completo.py.'
         )
 
 # ══════════════════════════════════════════════════════════════════
