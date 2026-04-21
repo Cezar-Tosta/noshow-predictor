@@ -4,6 +4,7 @@
 ![XGBoost](https://img.shields.io/badge/XGBoost-ML-orange)
 ![Streamlit](https://img.shields.io/badge/Streamlit-App-red)
 ![License](https://img.shields.io/badge/License-MIT-green)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://seu-usuario-noshow-predictor-app-XXXX.streamlit.app)
 
 ## Sobre o Projeto
 
@@ -20,6 +21,19 @@ Em unidades públicas de saúde, o não comparecimento de pacientes gera:
 - Prejuízo a outros pacientes em lista de espera
 
 Este modelo permite ações proativas — como envio de lembretes direcionados, overbooking controlado e priorização de lista de espera — com base na probabilidade prevista de no-show para cada agendamento.
+
+---
+
+## App
+
+🔗 **Acesse o app publicado:** https://noshow-predictor.streamlit.app/
+
+O app permite inserir os dados de um paciente e receber em tempo real:
+- A probabilidade de no-show com indicador de risco (baixo / médio / alto)
+- O gráfico SHAP waterfall explicando os fatores que influenciaram a previsão
+- As métricas de desempenho do modelo avaliadas no conjunto de teste
+
+> Substitua a URL acima pela URL real gerada no Streamlit Cloud após o deploy da Parte 10.
 
 ---
 
@@ -166,9 +180,15 @@ Todas as bibliotecas devem aparecer com versão, sem erros.
 
 ---
 
-## Executando os Scripts do Pipeline
+## Executando o Pipeline Completo
 
-Execute sempre a partir da **raiz do projeto**, com o venv ativo. Os scripts usam `pathlib.Path` — compatíveis com Windows e Linux.
+Para reproduzir todo o pipeline (pré-processamento, treinamento e avaliação) com um único comando:
+
+```bash
+python notebooks/pipeline_completo.py
+```
+
+Ou execute os scripts individualmente, em ordem, a partir da raiz do projeto:
 
 ```bash
 python notebooks/01_exploracao_dados.py
@@ -182,7 +202,6 @@ python notebooks/07_interpretabilidade.py
 ```
 
 > ⚠️ Execute os scripts **em ordem**. Cada um depende dos arquivos gerados pelo anterior.
-> O script da Parte 6 (`05_treinamento.py`) gera o `model.pkl` — necessário para o app e para os scripts das Partes 7 e 8.
 
 ---
 
@@ -196,17 +215,15 @@ Com o venv ativo, a partir da **raiz do projeto**:
 streamlit run app.py
 ```
 
-O navegador abrirá automaticamente em `http://localhost:8501`. Se não abrir, acesse o endereço manualmente.
-
-Para encerrar o app, pressione `Ctrl+C` no terminal.
+O navegador abrirá automaticamente em `http://localhost:8501`. Para encerrar, pressione `Ctrl+C` no terminal.
 
 **Pré-requisitos para o app funcionar corretamente:**
 
 | Arquivo necessário | Gerado por | Parte |
 |---|---|---|
-| `model/model.pkl` | `05_treinamento.py` | Parte 6 |
-| `model/feature_names.pkl` | `05_treinamento.py` | Parte 6 |
-| `assets/metrics_report.json` | `06_avaliacao.py` | Parte 7 |
+| `model/model.pkl` | `05_treinamento.py` ou `pipeline_completo.py` | Parte 6 / 10 |
+| `model/feature_names.pkl` | `05_treinamento.py` ou `pipeline_completo.py` | Parte 6 / 10 |
+| `assets/metrics_report.json` | `06_avaliacao.py` ou `pipeline_completo.py` | Parte 7 / 10 |
 
 ---
 
@@ -217,7 +234,7 @@ O repositório foi construído parte por parte, com commits padronizados. Isso p
 ### Visualizando o histórico no GitHub
 
 1. Acesse o repositório no GitHub
-2. Clique na aba **Commits** (ou no número de commits exibido abaixo dos botões Code / Issues / Pull requests)
+2. Clique na aba **Commits**
 3. Você verá a lista completa de commits em ordem cronológica inversa (mais recente primeiro)
 
 Para ler na ordem de construção, role até o commit mais antigo ou use o botão **Older** no final da lista.
@@ -226,12 +243,10 @@ Para ler na ordem de construção, role até o commit mais antigo ou use o botã
 
 1. Abra o GitHub Desktop com o repositório selecionado
 2. Clique na aba **History** no painel esquerdo
-3. Clique em qualquer commit para ver exatamente quais arquivos foram criados ou modificados naquele momento
-4. Clique em um arquivo dentro do commit para ver as linhas adicionadas (em verde) e removidas (em vermelho)
+3. Clique em qualquer commit para ver exatamente quais arquivos foram criados ou modificados
+4. Clique em um arquivo dentro do commit para ver as linhas adicionadas (verde) e removidas (vermelho)
 
 ### Entendendo a convenção de commits
-
-Cada commit segue o formato `tipo: descrição`, onde o tipo indica o que aconteceu:
 
 | Prefixo | Significado | Exemplo |
 |---|---|---|
@@ -241,9 +256,7 @@ Cada commit segue o formato `tipo: descrição`, onde o tipo indica o que aconte
 | `docs:` | Atualização de documentação | `docs: atualiza README após Parte 3` |
 | `refactor:` | Melhoria sem mudança de comportamento | `refactor: simplifica função de pré-processamento` |
 
-### Reconstruindo o projeto a partir do zero com o histórico
-
-Para estudar o projeto como se o estivesse construindo do zero, você pode fazer checkout de qualquer commit específico e ver o estado exato do repositório naquele ponto:
+### Reconstruindo o projeto a partir do zero
 
 **Pelo GitHub (navegador):**
 1. Vá até a aba **Commits**
@@ -258,8 +271,6 @@ Para estudar o projeto como se o estivesse construindo do zero, você pode fazer
 
 ### Mapa de commits por parte
 
-Ao navegar pelo histórico, você encontrará os commits na seguinte sequência:
-
 ```
 chore: configuração inicial do ambiente e estrutura do projeto   ← Parte 1
 feat: adiciona script de exploração inicial do dataset           ← Parte 2
@@ -272,8 +283,6 @@ feat: adiciona interpretabilidade com SHAP                       ← Parte 8
 feat: adiciona aplicação Streamlit                               ← Parte 9
 feat: deploy no Streamlit Cloud e documentação final             ← Parte 10
 ```
-
-Cada commit é um ponto de parada — você pode ler o script adicionado naquele commit, executá-lo, entender o que ele faz e só então avançar para o próximo.
 
 ---
 
@@ -299,12 +308,6 @@ Cada commit é um ponto de parada — você pode ler o script adicionado naquele
 > ⚠️ A coluna `No-show` tem lógica invertida: `"Yes"` significa **não compareceu**.
 
 Fonte do dataset: https://www.kaggle.com/datasets/joniarroba/noshowappointments
-
----
-
-## App
-
-*(URL pública será adicionada após o deploy na Parte 10)*
 
 ---
 
