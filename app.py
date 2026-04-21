@@ -276,5 +276,5 @@ with aba_sobre:
 
     **Interpretabilidade:** SHAP (SHapley Additive exPlanations)
 
-    **Repositório:** https://github.com/seu-usuario/noshow-predictor
+    **Repositório:** https://github.com/Cezar-Tosta/noshow-predictor
     ''')
